@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="TrainingPortal" default="clean-deploy" basedir=".">
+
+    <tstamp>
+        <format property="startTime" pattern="MM/dd/yyyy hh:mm aa" locale="en,US"/>
+    </tstamp>
+    <echo>Build started ${startTime} using Java ${ant.java.version}</echo>
+
+    <!-- check local setup presence -->
+    <property file="build.properties" />
+	<property name="project.home" value="${projects.home}/TrainingPortal"/>
+	<property name="exploded.war.name" value="${ant.project.name}.war"/>
+
+	<path id="jars.classpath">
+			<fileset id="RequiredJars" dir="${project.home}/WebContent/WEB-INF/lib">
+				<include name="*.jar"/>
+			</fileset>
+		</path>
+		<path id="project.classpath">
+			<path refid="jars.classpath" />
+						
+		</path>
+		<property name="project.classpath" refid="project.classpath"/>
+	
+		<target name="-init">
+			<property name="source.dir" value="${project.home}/src/" />
+		</target>
+	
+		<target name="clean" depends="-init">
+			<delete dir="${appserver.deploy.dir}/${ant.project.name}"/>
+			<delete file="${appserver.deploy.dir}/${ant.project.name}.war"/>
+			<delete dir="${appserver.deploy.dir}/${exploded.war.name}"/>
+			<delete file="${appserver.deploy.dir}/${ant.project.name}.ear"/>
+			<mkdir dir="${project.home}/WebContent/WEB-INF/classes"/>
+		</target>
+
+	
+	<target name="compile-java" depends="clean">
+			<javac srcdir="${source.dir}" destdir="${project.home}/WebContent/WEB-INF/classes" debug="${debug}">
+				<classpath refid="project.classpath"/>
+			</javac>
+			<copy todir="${project.home}/WebContent/WEB-INF/classes">
+				<fileset dir="${source.dir}">
+					<include name="**/*.xml"/>
+					<include name="**/*.properties"/>
+					<include name="**/*.txt"/>
+				</fileset>
+			</copy>
+			
+			<replace dir="${source.dir}" token="@@log4j.appender.file.File@@" value="${log4j.appender.file.File}"/>
+		</target>
+	
+
+    <target name="war" description="Builds the application's war file." depends="compile-java">
+        <war destfile="${project.home}build/${exploded.war.name}" webxml="${project.home}/WebContent/WEB-INF/web.xml" basedir="${project.home}/WebContent" />
+    </target>
+	
+
+   
+    <target name="deploy-war" description="Executes LLS war file deployment." depends="war">
+        <copy file="${project.home}build/${exploded.war.name}" todir="${appserver.deploy.dir}" overwrite="true"/>
+	</target>
+
+
+    <target name="clean-deploy" description="Default LLS task." depends="deploy-war" />
+</project>

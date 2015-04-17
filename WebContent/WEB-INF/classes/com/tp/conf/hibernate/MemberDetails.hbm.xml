@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Mar 13, 2007 11:37:26 AM by Hibernate Tools 3.2.0.b9 -->
+<hibernate-mapping package="com.tp.domain">
+    
+    <class name="MemberDetails" table="MEMBER_DETAILS">
+        <id name="memberID" type="long">
+            <column name="MEMBER_ID" />
+            <generator class="identity" />
+        </id>
+
+        <many-to-one name="role" class="Roles" >
+            <column name="ROLE_ID" not-null="true" />
+        </many-to-one>
+        
+     
+        <property name="email" type="string">
+            <column name="EMAIL"/>
+        </property>
+        
+               
+        <property name="password" type="string">
+            <column name="PASSWORD"/>
+        </property>
+        
+     <!--    <property name="publishedFlag" type="boolean">
+            <column name="PUBLISHED_FL"/>
+        </property>        
+        <property name="createdID" type="string">
+        	<column name="CREATED_ID" not-null="true"/>
+        </property>
+        <property name="createdDate" type="date">
+        	<column name="CREATED_DATE" not-null="true"/>
+        </property>
+        <property name="lastEditedID" type="string">
+        	<column name="LAST_MODIFIED_ID" not-null="false"/>
+        </property>
+        <property name="lastEditedDate" type="date">
+        	<column name="LAST_MODIFIED_DATE" not-null="false"/>
+        </property> -->
+	</class>
+</hibernate-mapping>
